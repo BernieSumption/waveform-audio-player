@@ -1,0 +1,394 @@
+
+
+@BRAND_COLOR: #ca17a6;
+
+
+/**
+ * COMMON STYLES. These styles apply to both the enabled and disabled player (disabled is when
+ * there is no JS available, or JS is broken, or audio is not supported.
+ *
+ * They therefore can't use any of the class names added by JS and must operate on
+ * the .waveform-player class on the root element and descendent element names
+ */
+
+.waveform-player {
+  background: #000;
+  color: #CCC;
+  position: relative;
+  padding: 10px;
+  border: solid 1px transparent;
+}
+.waveform-player a {
+  color: @BRAND_COLOR;
+}
+
+.waveform-player * {
+  font-family: "Helvetica Nueue", Helvetica, Arial, sans-serif;
+  font-size: 16px!important;
+}
+
+.waveform-player > ul, .waveform-player > ul > li {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.waveform-player > ul {
+  position: relative;
+}
+
+
+.waveform-player > ul > li {
+  
+  &:after {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    clear: both;
+  }
+}
+
+.waveform-player > ul > li > a {
+  display: block;
+  box-sizing: border-box;
+  padding: 4px 10px;
+  position: relative;
+  color: @BRAND_COLOR;
+}
+.waveform-player > ul > li > a:after {
+  &:extend(.waveform-player-icon-track-paused);
+  content: "";
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  position: absolute;
+  right: 10px;
+}
+
+.waveform-player > ul > li > div {
+  box-sizing: border-box;
+  padding-left: 20px;
+}
+
+.waveform-player > ul > li > div > p {
+  margin: 10px 0!important;
+}
+
+.waveform-player > ul > li > div > p:first-child {
+  margin-top: 0!important;
+}
+
+
+/**
+ * DISABLED STYLES. These styles specifically only apply to the disabled
+ * player, and must be removed from the enabled player
+ */
+ 
+.waveform-player > ul > li {
+  border-top: solid 1px #444;
+}
+.waveform-player-enabled > ul > li {
+  border-top: none;
+}
+
+.waveform-player > ul > li:last-child {
+  border-bottom: solid 1px #444;
+}
+.waveform-player-enabled > ul > li:last-child {
+  border-bottom: none
+}
+
+.waveform-player > ul > li > a:hover:after {
+  &:extend(.waveform-player-icon-track-playing);
+}
+.waveform-player-enabled > ul > li > a:hover:after {
+  &:extend(.waveform-player-icon-track-paused);
+}
+
+/*
+ * ENABLED STYLES. Below this line, styles use specific classes added
+ * by JS and therefore only apply if the component is enabled 
+ */
+
+// waveform styles. These are read by JavaScript and used to render the canvas waveform diagram.
+// The selector must remain unchanged, so exactly ".waveform-player-upper-unplayed { ... }" not
+// for example ".waveform-player-upper-unplayed, .waveform-player-lower-unplayed  { ... }"
+.waveform-player-upper-unplayed {
+  color: lighten(desaturate(@BRAND_COLOR, 100%), 10%);
+}
+.waveform-player-lower-unplayed {
+  color: darken(desaturate(@BRAND_COLOR, 100%), 10%);
+}
+.waveform-player-upper-played {
+  color: lighten(@BRAND_COLOR, 10%);
+}
+.waveform-player-lower-played {
+  color: darken(@BRAND_COLOR, 10%);
+}
+.waveform-player-mouseover-upper-played {
+  color: lighten(@BRAND_COLOR, 35%);
+}
+.waveform-player-mouseover-lower-played {
+  color: darken(@BRAND_COLOR, 35%);
+}
+
+
+
+.waveform-player-track-list-link {
+  text-decoration: none;
+}
+.waveform-player-track-list-link:hover {
+  text-decoration: underline;
+}
+
+.waveform-player-track-list {
+  transition: min-height 0.4s;
+  overflow: hidden;
+}
+
+.waveform-player-track-list-item {
+  transition: background-color 0.4s;
+}
+
+.waveform-player-track-list-item > a {
+  border-top: solid 1px #444;
+}
+.waveform-player-track-list-item:last-child > a {
+  border-bottom: solid 1px #444;
+}
+
+
+.waveform-player-track-list-item-description {
+  // max-height: 0;
+  overflow: auto;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 0.4s, opacity 0.4s, max-height 0.4s, padding 0.4s;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.waveform-player-track-list-item-playing .waveform-player-track-list-item-description:not(:empty) {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.waveform-player-playing .waveform-player-track-list-item-active .waveform-player-track-list-item-description {
+  // max-height: 400px;
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.4s, max-height 0.4s;
+}
+
+.waveform-player-playing .waveform-player-track-list-item-active > a {
+  background: #333;
+}
+
+.waveform-player-playing .waveform-player-track-list-item-active a:after {
+  background: data-uri("icons/track-playing.svg")!important;
+}
+
+.waveform-player-track-list-item-description::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+.waveform-player-track-list-item-description::-webkit-scrollbar-thumb {
+  background: darken(@BRAND_COLOR, 33%);
+  border-radius: 5px;
+}
+.waveform-player-track-list-item-description::-webkit-scrollbar-thumb:hover {
+  background: @BRAND_COLOR;
+}
+
+.waveform-player-track-list-item-description::-webkit-scrollbar-track {
+  background: none;
+  width: 20px;
+}
+
+.waveform-player-track-fft-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.waveform-player-controls {
+  position: relative;
+  height: 85px;
+}
+
+
+@font-face {
+  font-family: 'fontello';
+  src: data-uri("icons/fontello-icons.ttf") format('truetype');
+}
+ 
+// .waveform-player-icon-button {
+//   font-family: "fontello";
+//   font-style: normal;
+//   font-weight: normal;
+//   display: inline-block;
+//   text-decoration: inherit;
+//   width: 1em;
+//   margin-right: .2em;
+//   text-align: center;
+//   font-variant: normal;
+//   text-transform: none;
+//   line-height: 1em;
+// }
+// @ICON_PLAY: '\e802';
+// @ICON_PAUSE: '\e804';
+// @ICON_NEXT: '\e805';
+// @ICON_PREV: '\e806';
+
+//TODO: merge above into waveform-button-mixin
+
+.waveform-button-mixin(@size, @icon, @overIcon) {
+  background: @icon no-repeat;
+  display: block;
+  position: absolute;
+  border: 0;
+  text-indent: -100000px;
+  min-width: @size + 10;
+  min-height: @size + 10;
+  width: @size + 10;
+  height: @size + 10;
+  margin-top: -5px;
+  margin-left: -5px;
+  border: solid 5px transparent!important;
+  
+  &:hover:not([disabled]) {
+    background: @overIcon no-repeat;
+    cursor: pointer;
+  }
+  &:disabled {
+    opacity: 0.6;
+  }
+}
+
+.waveform-player-controls-toggleplay {
+  .waveform-button-mixin(50px, data-uri("icons/controls-play.svg"), data-uri("icons/controls-play-over.svg"));
+  top: 0;
+  left: 0;
+}
+
+.waveform-player-playing .waveform-player-controls-toggleplay {
+  background-image: data-uri("icons/controls-pause.svg");
+  
+  &:hover {
+    background-image: data-uri("icons/controls-pause-over.svg");
+  }
+}
+
+.waveform-player-controls-prev {
+  .waveform-button-mixin(18px, data-uri("icons/controls-left-navigate.svg"), data-uri("icons/controls-left-navigate-over.svg"));
+  top: 57px;
+  left: 0;
+}
+
+.waveform-player-controls-next {
+  .waveform-button-mixin(18px, data-uri("icons/controls-left-navigate.svg"), data-uri("icons/controls-left-navigate-over.svg"));
+  transform: rotate(180deg);
+  top: 57px;
+  left: 32px;
+}
+
+.waveform-player-controls-peakdata-wrapper {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  left: 60px;
+  bottom: 10px;
+}
+
+.waveform-player-controls-peakdata {
+  width: 100%;
+  height: 100%;
+  image-rendering: pixelated;
+}
+
+.waveform-player-buffering .waveform-player-controls-peakdata {
+  opacity: 0.8;
+}
+
+.waveform-player-controls-time {
+  position: absolute;
+  top: 38px;
+  font-size: 11px!important;
+  background: #000;
+  padding: 0px 2px;
+  transition: opacity 0.4s;
+}
+
+.waveform-player-controls-current-time {
+  &:extend(.waveform-player-controls-time);
+  left: 0;
+  color: @BRAND_COLOR;
+}
+
+.waveform-player-controls-total-time {
+  &:extend(.waveform-player-controls-time);
+  right: 0;
+}
+
+p.waveform-player-subsection {
+  transition: background-color 0.6s, border-left-color 0.6s; 
+  
+  border-left: solid 3px #000;
+  padding: 0 0 0 10px;
+}
+
+.waveform-player > ul > li > div > p.waveform-player-subsection {
+  margin: 0!important;
+}
+
+p.waveform-player-active-subsection {
+  border-left-color: @BRAND_COLOR;
+  background: #333;
+}
+
+a.waveform-player-subsection-play {
+  display: block;
+  
+  text-decoration: inherit;
+  color: inherit;
+  
+  padding: 5px;
+  
+  &:before {
+    content: "";
+    display: inline-block;
+    height: 15px;
+    width: 15px;
+    margin-right: 10px;
+    
+    &:extend(.waveform-player-icon-track-paused);
+    
+  }
+  
+  &:hover:before {
+    &:extend(.waveform-player-icon-track-playing);
+  }
+}
+
+
+
+.waveform-player-active-subsection a.waveform-player-subsection-play:before {
+  &:extend(.waveform-player-icon-track-playing);
+}
+
+
+
+
+/**
+ * Icons.
+ */
+
+.waveform-player-icon-track-paused {
+  background: data-uri("icons/track-paused.svg");
+}
+
+.waveform-player-icon-track-playing {
+  background: data-uri("icons/track-playing.svg")!important;
+}
