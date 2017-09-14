@@ -170,6 +170,8 @@ export class WaveformRenderer {
   }
 
   private _resizeCanvas(width: number, height: number) {
+    width = Math.min(width, 10000);
+    height = Math.min(height, 10000);
     let isResized = false;
     if (this._canvas.width !== width || this._canvas.height !== height) {
       this._canvas.width = width;

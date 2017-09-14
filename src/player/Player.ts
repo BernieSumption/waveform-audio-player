@@ -28,6 +28,8 @@ const CONTROLS_HTML = `
 <div class="waveform-player-show-more"></div>
 `;
 
+export const ASCII_PEAK_DATA_MAP = "!#$%()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
+
 export class Player {
 
 

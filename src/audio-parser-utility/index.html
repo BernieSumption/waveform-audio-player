@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Waveform Audio Player Demo</title>
+  <script src="audio-parser.js" defer></script>
+  <style>
+    body, input {
+      font-family: sans-serif;
+      font-size: 1.2rem;
+    }
+    table {
+      border-collapse: collapse;
+    }
+    td {
+      padding: 0.5em;
+    }
+    td:nth-child(1) {
+      font-size: 2em;
+      color: green;
+    }
+    td:nth-child(4) {
+      font-size: 0.9em;
+      color: #AAA;
+    }
+    canvas {
+      box-sizing: content-box;
+      border: solid 2px #000;
+    }
+  </style>
+</head>
+  <body>
+    <h1>Waveform Audio Player Track Parsing Utility</h1>
+    <p>In order for the player to show its pretty waveform display, it needs access to the audio file peak data, which is saved in the player HTML using a text packing format that looks like this: <code>&lt;a href="track.mp3" data-peaks="sm{{lkpjwly}[wbl[^fd|lmINO;JK@ ...etc..."&gt;track name&lt;/a&gt;</code>. This page is a little utility to generate the peak data for an audio file.</p>
+    <p>This page has been tested in Chrome, and likely only works in modern browsers. If it doesn't work for you, make sure you're using a modern browser, and check the console for errors.</p>
+    <table>
+      <tr>
+        <td>1.</td>
+        <td>Select a file:</td>
+        <td><input type="file" id="file-input" accept="audio/*"></td>
+      </tr>
+      <tr>
+        <td>2.</td>
+        <td>Player width:</td>
+        <td><input id="player-width-input" type="number" min="1" max="99999" value="500">px</td>
+        <td>Approximate width of player in pixels. Because wider players need more peak data. Do not double this figure for retina displays - I already do that.</td>
+      <tr>
+        <td>3.</td>
+        <td>Then click this:</td>
+        <td><input type="button" value="Generate!" id="generate-button"></td>
+      </tr>
+      <tr>
+        <td>4.</td>
+        <td>Preview:</td>
+        <td><canvas style="width:500px; height: 200px" id="preview-canvas"></canvas></td>
+      </tr>
+      <tr>
+        <td>5.</td>
+        <td>Peak data:</td>
+        <td style="position: relative;"><textarea id="peak-data-output" style="width: 100%; height: 100px;"></textarea></td>
+        <td>Copy and paste this into the data-peaks attribute of your waveform player HTML.</td>
+      </tr>
+    </table>
+  </body>
+</html>

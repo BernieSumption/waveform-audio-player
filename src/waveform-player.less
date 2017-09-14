@@ -1,7 +1,8 @@
 
 
 @BRAND_COLOR: #ca17a6;
-
+@BACKGROUND_COLOR: black;
+@ACTIVE_TRACK_BG: lighten(@BACKGROUND_COLOR, 20%);
 
 /**
  * COMMON STYLES. These styles apply to both the enabled and disabled player (disabled is when
@@ -12,7 +13,7 @@
  */
 
 .waveform-player {
-  background: #000;
+  background: @BACKGROUND_COLOR;
   color: #CCC;
   position: relative;
   padding: 10px;
@@ -56,15 +57,6 @@
   position: relative;
   color: @BRAND_COLOR;
 }
-.waveform-player > ul > li > a:after {
-  &:extend(.waveform-player-icon-track-paused);
-  content: "";
-  width: 15px;
-  height: 15px;
-  display: inline-block;
-  position: absolute;
-  right: 10px;
-}
 
 .waveform-player > ul > li > div {
   box-sizing: border-box;
@@ -99,12 +91,6 @@
   border-bottom: none
 }
 
-.waveform-player > ul > li > a:hover:after {
-  &:extend(.waveform-player-icon-track-playing);
-}
-.waveform-player-enabled > ul > li > a:hover:after {
-  &:extend(.waveform-player-icon-track-paused);
-}
 
 /*
  * ENABLED STYLES. Below this line, styles use specific classes added
@@ -158,7 +144,6 @@
   border-bottom: solid 1px #444;
 }
 
-
 .waveform-player-track-list-item-description {
   // max-height: 0;
   overflow: auto;
@@ -180,11 +165,7 @@
 }
 
 .waveform-player-playing .waveform-player-track-list-item-active > a {
-  background: #333;
-}
-
-.waveform-player-playing .waveform-player-track-list-item-active a:after {
-  background: data-uri("icons/track-playing.svg")!important;
+  background: @ACTIVE_TRACK_BG;
 }
 
 .waveform-player-track-list-item-description::-webkit-scrollbar {
@@ -224,32 +205,20 @@
   src: data-uri("icons/fontello-icons.ttf") format('truetype');
 }
  
-// .waveform-player-icon-button {
-//   font-family: "fontello";
-//   font-style: normal;
-//   font-weight: normal;
-//   display: inline-block;
-//   text-decoration: inherit;
-//   width: 1em;
-//   margin-right: .2em;
-//   text-align: center;
-//   font-variant: normal;
-//   text-transform: none;
-//   line-height: 1em;
-// }
-// @ICON_PLAY: '\e802';
-// @ICON_PAUSE: '\e804';
-// @ICON_NEXT: '\e805';
-// @ICON_PREV: '\e806';
+@ICON_PLAY: '\e802';
+@ICON_PAUSE: '\e804';
+@ICON_NEXT: '\e805';
+@ICON_PREV: '\e806';
 
-//TODO: merge above into waveform-button-mixin
+.waveform-button-mixin(@size, @iconChar) {
+  color: @BRAND_COLOR;
+  background: @BACKGROUND_COLOR;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: @size / 8;
 
-.waveform-button-mixin(@size, @icon, @overIcon) {
-  background: @icon no-repeat;
   display: block;
   position: absolute;
   border: 0;
-  text-indent: -100000px;
   min-width: @size + 10;
   min-height: @size + 10;
   width: @size + 10;
@@ -257,9 +226,14 @@
   margin-top: -5px;
   margin-left: -5px;
   border: solid 5px transparent!important;
+  text-indent: -10000px;
+  background: none;
+
+  .waveform-icon-mixin(@size, @iconChar);
   
   &:hover:not([disabled]) {
-    background: @overIcon no-repeat;
+    background: @BRAND_COLOR;
+    color: @BACKGROUND_COLOR;
     cursor: pointer;
   }
   &:disabled {
@@ -267,29 +241,50 @@
   }
 }
 
+.waveform-icon-mixin(@size, @iconChar) {
+
+  &:before {
+    font-family: "fontello";
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: none;
+    font-variant: normal;
+    text-transform: none;
+    font-size: @size;
+    text-align: center;
+    line-height: @size;
+    text-indent: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: @size;
+    height: @size;
+    content: @iconChar;
+  }
+}
+
+
+
 .waveform-player-controls-toggleplay {
-  .waveform-button-mixin(50px, data-uri("icons/controls-play.svg"), data-uri("icons/controls-play-over.svg"));
+  .waveform-button-mixin(50px, @ICON_PLAY);
   top: 0;
   left: 0;
 }
 
 .waveform-player-playing .waveform-player-controls-toggleplay {
-  background-image: data-uri("icons/controls-pause.svg");
-  
-  &:hover {
-    background-image: data-uri("icons/controls-pause-over.svg");
+  &:before {
+    content: @ICON_PAUSE;
   }
 }
 
 .waveform-player-controls-prev {
-  .waveform-button-mixin(18px, data-uri("icons/controls-left-navigate.svg"), data-uri("icons/controls-left-navigate-over.svg"));
+  .waveform-button-mixin(18px, @ICON_PREV);
   top: 57px;
   left: 0;
 }
 
 .waveform-player-controls-next {
-  .waveform-button-mixin(18px, data-uri("icons/controls-left-navigate.svg"), data-uri("icons/controls-left-navigate-over.svg"));
-  transform: rotate(180deg);
+  .waveform-button-mixin(18px, @ICON_NEXT);
   top: 57px;
   left: 32px;
 }
@@ -316,7 +311,7 @@
   position: absolute;
   top: 38px;
   font-size: 11px!important;
-  background: #000;
+  background: @BACKGROUND_COLOR;
   padding: 0px 2px;
   transition: opacity 0.4s;
 }
@@ -335,7 +330,7 @@
 p.waveform-player-subsection {
   transition: background-color 0.6s, border-left-color 0.6s; 
   
-  border-left: solid 3px #000;
+  border-left: solid 3px @BACKGROUND_COLOR;
   padding: 0 0 0 10px;
 }
 
@@ -345,7 +340,7 @@ p.waveform-player-subsection {
 
 p.waveform-player-active-subsection {
   border-left-color: @BRAND_COLOR;
-  background: #333;
+  background: @ACTIVE_TRACK_BG;
 }
 
 a.waveform-player-subsection-play {
@@ -355,40 +350,4 @@ a.waveform-player-subsection-play {
   color: inherit;
   
   padding: 5px;
-  
-  &:before {
-    content: "";
-    display: inline-block;
-    height: 15px;
-    width: 15px;
-    margin-right: 10px;
-    
-    &:extend(.waveform-player-icon-track-paused);
-    
-  }
-  
-  &:hover:before {
-    &:extend(.waveform-player-icon-track-playing);
-  }
-}
-
-
-
-.waveform-player-active-subsection a.waveform-player-subsection-play:before {
-  &:extend(.waveform-player-icon-track-playing);
-}
-
-
-
-
-/**
- * Icons.
- */
-
-.waveform-player-icon-track-paused {
-  background: data-uri("icons/track-paused.svg");
-}
-
-.waveform-player-icon-track-playing {
-  background: data-uri("icons/track-playing.svg")!important;
 }
