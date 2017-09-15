@@ -1,4 +1,4 @@
-
+import {NumberArray, makeNumberArray} from "./shared";
 
 const PEAK_DATA_TRANSITION_TIME_SECONDS = 0.6;
 
@@ -12,11 +12,6 @@ const PEAK_DATA_TRANSITION_STAGGER = 2;
 // Yes "wibble" is a verb. I checked.
 const WIBBLE_AMPLITUDE = 0.35;
 const WIBBLE_WAVELENGTH = 0.2;
-
-interface NumberArray {
-  [key: number]: number;
-  length: number;
-}
 
 export interface WaveformRendererColours {
   upperUnplayed: string;
@@ -215,13 +210,14 @@ export class WaveformRenderer {
     let peaks = this._transitioningPeaks;
     let len = peaks.length;
     let halfHeight = Math.ceil(height / 2) + 1;
+    let minWaveHeight = halfHeight - 2;
     let ctx = this._ctx;
     ctx.clearRect(0, 0, width, height);
     ctx.beginPath();
     ctx.moveTo(0, halfHeight);
     let peakWidth = width / peaks.length;
     for (let i = 0; i < len; i++) {
-      ctx.lineTo(i * peakWidth, halfHeight - (peaks[i] * halfHeight));
+      ctx.lineTo(i * peakWidth, minWaveHeight - (peaks[i] * minWaveHeight));
     }
     ctx.lineTo(width, halfHeight);
     ctx.closePath();
@@ -343,13 +339,6 @@ function ease(input: number) {
 function stagger(input: number, index: number, count: number, staggerAmount: number) {
   let delay = index / count * (1 - (1 / staggerAmount));
   return ease(Math.min(1, Math.max(0, (input - delay) * staggerAmount)));
-}
-
-function makeNumberArray(length: number): NumberArray {
-  if ("Float32Array" in window) {
-    return new Float32Array(length);
-  }
-  return new Array(length);
 }
 
 function resamplePeaks(source: NumberArray, destination: NumberArray) {

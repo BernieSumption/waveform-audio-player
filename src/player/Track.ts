@@ -1,3 +1,4 @@
+import { NumberArray } from "./shared";
 
 const FFT_SMOOTHING_CONSTANT = 0.5; // higher values make the bars less jumpy
 const FFT_BAR_RELATIVE_WIDTH = 0.9;
@@ -42,7 +43,7 @@ export class Track {
   public onended: (t: Track) => void = null;
   public onbufferingchange: (t: Track) => void = null;
 
-  constructor(public audioSrc: string, private _listItem: HTMLLIElement, private _description: HTMLDivElement, public peakData: number[], public subsections: Subsection[]) {
+  constructor(public audioSrc: string, private _listItem: HTMLLIElement, private _description: HTMLDivElement, public peakData: NumberArray, public subsections: Subsection[]) {
 
     this._metaSrc = audioSrc.replace(/\.\w+$/, ".meta");
     this._audio = document.createElement("audio");
@@ -191,7 +192,7 @@ export class Track {
       this.ontimeupdate(this);
     }
   }
-  
+
   private _handleEnded = () => {
     if (this.onended) {
       this.onended(this);

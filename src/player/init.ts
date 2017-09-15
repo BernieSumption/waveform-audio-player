@@ -17,6 +17,7 @@ export function initialiseWaveformPlayers() {
   for (let i = 0; i < wrappers.length; i++) {
     let wrapper = wrappers[i];
     if (wrapper instanceof HTMLDivElement) {
+      if (wrapper.hasAttribute("data-disable-waveform-player")) continue;
       let playerId = wrapper.getAttribute("data-waveform-player-id");
       if (playerId === null) {
         playerId = String(++playerIdCounter);
@@ -26,6 +27,8 @@ export function initialiseWaveformPlayers() {
         wrapper.setAttribute("data-waveform-player-id", playerId);
       }
       activePlayers[playerId] = true;
+    } else {
+      console.error(`${WRAPPER_CLASS_NAME} class attribute is only supported on div elements!`);
     }
   }
   for (let playerId in players) {

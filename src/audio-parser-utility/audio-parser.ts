@@ -1,7 +1,8 @@
-// define variables
+/// <reference path="../../typings/index.d.ts" />
+
 
 import { WaveformRenderer } from "../player/WaveformRenderer";
-import { ASCII_PEAK_DATA_MAP } from "../player/Player";
+import * as base64 from "base64-js";
 
 function init() {
 
@@ -91,13 +92,12 @@ function init() {
       resized[i] = Math.max(0, Math.min(1, max));
     }
     waveform.setPeakData(resized);
-    let chars: string[] = [];
+    let bytes = new Uint8ClampedArray(samples);
     let base = "!".charCodeAt(0);
     for (let i = 0; i < samples; i++) {
-      let code = ~~Math.min(resized[i] * ASCII_PEAK_DATA_MAP.length, ASCII_PEAK_DATA_MAP.length - 1);
-      chars.push(ASCII_PEAK_DATA_MAP[code]);
+      bytes[i] = resized[i] * 256;
     }
-    peakDataOutput.value = chars.join("");
+    peakDataOutput.value = base64.fromByteArray(bytes);
   }
 }
 

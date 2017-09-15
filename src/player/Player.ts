@@ -1,6 +1,10 @@
+/// <reference path="../../typings/index.d.ts" />
+
 
 import { Track, Subsection } from "./Track";
+import { NumberArray, makeNumberArray } from "./shared";
 import { WaveformRenderer } from "./WaveformRenderer";
+import * as base64 from "base64-js";
 
 const SPECIAL_MODE_DISABLE = "disable";
 
@@ -143,36 +147,6 @@ export class Player {
       let style = getComputedStyle(el);
       return style ? style.color : "";
     }
-    
-    // let sheets = document.styleSheets;
-    // for (let i = 0; i < sheets.length; i++) {
-    //   let rules: CSSRuleList = (sheets[i] as any).rules || (sheets[i] as any).cssRules;
-    //   if (rules) {
-    //     for (let j = 0; j < rules.length; j++) {
-    //       let rule: CSSStyleRule = rules[j] as CSSStyleRule;
-    //       switch (rule.cssText) {
-    //         case ".waveform-player-upper-unplayed":
-    //           this._upperUnplayedColour = rule.style.color;
-    //           break;
-    //         case ".waveform-player-upper-unplayed":
-    //           this._upperUnplayedColour = rule.style.color;
-    //           break;
-    //         case ".waveform-player-upper-unplayed":
-    //           this._upperUnplayedColour = rule.style.color;
-    //           break;
-    //         case ".waveform-player-upper-unplayed":
-    //           this._upperUnplayedColour = rule.style.color;
-    //           break;
-    //         case ".waveform-player-upper-unplayed":
-    //           this._upperUnplayedColour = rule.style.color;
-    //           break;
-    //         case ".waveform-player-upper-unplayed":
-    //           this._upperUnplayedColour = rule.style.color;
-    //           break;
-    //       }
-    //     }
-    //   }
-    // }
   }
 
   private _handlePlayingStateChange() {
@@ -230,9 +204,7 @@ export class Player {
         e.preventDefault();
         this._selectTrack(track);
         let startTimeString = el.getAttribute("data-start-time");
-        if (startTimeString) {
-          this._currentTrack.setCurrentTime(parseFloat(startTimeString));
-        }
+        this._currentTrack.setCurrentTime(parseFloat(startTimeString) || 0);
         return;
       }
     }
@@ -381,12 +353,12 @@ export class Player {
       }
       link.className = "waveform-player-track-list-link";
 
-      let peakCSV = link.getAttribute("data-peaks");
-      if (peakCSV === null || peakCSV === "") {
+      let peakBase64 = link.getAttribute("data-peaks");
+      if (peakBase64 === null || peakBase64 === "") {
         console.error(`<a href="${link.href}"> track has no data-peaks attribute.`);
-        peakCSV = "0";
+        peakBase64 = "0";
       }
-      let peaks = parseCSV(peakCSV, link.href);
+      let peaks = parseDataPeaksAttrbute(peakBase64, link.href);
 
       if (!description) {
         description = document.createElement("div");
@@ -425,7 +397,7 @@ export class Player {
       let subsectionEl = subsectionsEls[i] as HTMLElement;
       let text = subsectionEl.textContent.trim().replace(/\s+/g, " ");
       // matches e.g. "1:23 - title" or "1:23 to 4:56 - title"
-      let match = text.match(/^(\d:\d\d)\s*(?:(?:-|to)\s*(\d:\d\d))?\s*(?::|-)?\s*(.*)/i);
+      let match = text.match(/^(\d:\d\d(?:\.\d+)?)\s*(?:(?:-|to)\s*(\d:\d\d(?:\.\d+)?))?\s*(?::|-)?\s*(.*)/i);
       if (!match) {
         console.error(`Subsection doesn't have correct text format "1:23 - title" or "1:23 to 4:56 - title": "${text}"`);
       } else {
@@ -456,7 +428,7 @@ export class Player {
         return null;
       }
       let [minutes, seconds] = time.split(":");
-      return parseInt(minutes) * 60 + parseInt(seconds);
+      return parseFloat(minutes) * 60 + parseFloat(seconds);
     }
   }
 
@@ -518,18 +490,14 @@ export class Player {
   }
 }
 
-function parseCSV(csv: string, href: string) {
+function parseDataPeaksAttrbute(value: string, href: string) {
   let warned = false;
-  return csv.split(",").map(v => {
-    let parsed = parseFloat(v);
-    if (!warned && isNaN(parsed) || parsed > PEAK_DATA_MAX || parsed < PEAK_DATA_MIN) {
-      warned = true;
-      console.error(`<a href="${href}"> track's data-peaks attribute contains invalid CSV values "${parsed}"`);
-    }
-    parsed = parsed || 0;
-    let adjusted = (parsed - PEAK_DATA_MIN) / (PEAK_DATA_MAX - PEAK_DATA_MIN);
-    return Math.max(0, Math.min(1, adjusted));
-  });
+  let bytes = base64.toByteArray(value);
+  let peaks = makeNumberArray(bytes.length);
+  for (let i = 0; i < peaks.length; i++) {
+    peaks[i] = bytes[i] / 255;
+  }
+  return peaks;
 }
 
 function browserSupportsRequiredFeatures() {

@@ -158,7 +158,6 @@
   padding-bottom: 10px;
 }
 .waveform-player-playing .waveform-player-track-list-item-active .waveform-player-track-list-item-description {
-  // max-height: 400px;
   visibility: visible;
   opacity: 1;
   transition: opacity 0.4s, max-height 0.4s;
@@ -320,6 +319,7 @@
   &:extend(.waveform-player-controls-time);
   left: 0;
   color: @BRAND_COLOR;
+  pointer-events: none;
 }
 
 .waveform-player-controls-total-time {
