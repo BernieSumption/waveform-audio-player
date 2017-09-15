@@ -56,11 +56,15 @@
     <h2>Player without JavaScript</h2>
     <p>This is how the player looks to older browsers. Importantly, this is also what search engines see, so all those links and description metadata will be searchable on The Google.</p>
     <div id="disabled-player"></div>
+    <h2>HTML structure</h2>
+    <p>This is The underlying HTML for both styles of player above:</p>
+    <pre id="player-html" style="overflow: scroll;"></pre>
     <script>
       var player = document.getElementById("first-player");
       var secondPlayer = player.cloneNode(true);
       secondPlayer.setAttribute("data-disable-waveform-player", "");
       document.getElementById("disabled-player").appendChild(secondPlayer);
+      document.getElementById("player-html").textContent = player.outerHTML;
     </script>
     <h3>Audio credits</h3>
     <ol>
