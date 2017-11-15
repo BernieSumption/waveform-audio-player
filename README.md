@@ -3,7 +3,7 @@ Waveform Audio Player
 
 Waveform Audio Player is a JavaScript widget designed for demonstrating audio clips.
 
-<img src="https://github.com/BernieSumption/waveform-audio-player/raw/master/sample-player-image.png">
+<a href="https://cdn.rawgit.com/BernieSumption/waveform-audio-player/master/release/demo.html"><img src="https://github.com/BernieSumption/waveform-audio-player/raw/master/sample-player-image.png"></a>
 
  * **Designed for audio demos**: Write track descriptions and highlight key points in a track
  * **Fancy**: Waveform diagram with animated track transitions and live FFT graph
