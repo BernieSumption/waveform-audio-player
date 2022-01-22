@@ -54,6 +54,8 @@ export class Track {
     this._audio.addEventListener("end", this._handleEnded);
     this._audio.addEventListener("error", this._handleStoppedDueToError);
     this._audio.addEventListener("stalled", this._handleStoppedDueToError);
+    document.body.appendChild(this._audio)
+    this._audio.load()
 
     subsections.sort((a, b) => a.startTime - b.startTime);
 
@@ -61,7 +63,6 @@ export class Track {
     this._updateSubsectionDisplay();
 
     if (SUPPORTS_AUDIO_CONTEXT) {
-      this._setupAudioContext();
       this._fftCanvas = document.createElement("canvas");
       this._fftCanvas.className = "waveform-player-track-fft-canvas";
       this._listItem.firstElementChild.appendChild(this._fftCanvas);
@@ -74,6 +75,9 @@ export class Track {
       this._resumeTime = 0;
     }
     if (playing) {
+      if (SUPPORTS_AUDIO_CONTEXT) {
+        this._setupAudioContext();
+      }
       this._waitingForAudioStart = true;
       this._audio.currentTime = this._resumeTime || 0;
       this._audio.play();
@@ -216,6 +220,9 @@ export class Track {
   }
 
   private _setupAudioContext() {
+    if (this._audioSource) {
+      return
+    }
     if (GLOBAL_CONTEXT === null) {
       GLOBAL_CONTEXT = new (window["AudioContext"] || window["webkitAudioContext"])() as AudioContext;
       GLOBAL_ANALYSER = GLOBAL_CONTEXT.createAnalyser();

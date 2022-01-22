@@ -13,7 +13,7 @@ Waveform Audio Player is a JavaScript widget designed for demonstrating audio cl
 Demos
 -----
 
-I have a [demo using sounds from freesound.org](https://cdn.rawgit.com/BernieSumption/waveform-audio-player/master/release/demo.html).
+I have a [demo using sounds from freesound.org](https://berniesumption.github.io/waveform-audio-player/release/demo.html).
 
 Or to see the player used on a real site, check out <a href="https://cytomic.com/">Cytomic</a>, who make outstanding music software, and kindly paid for the development of this open source software. Thanks Cytomic!
 
